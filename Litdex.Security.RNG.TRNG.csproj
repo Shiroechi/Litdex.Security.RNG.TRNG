@@ -1,0 +1,41 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <RootNamespace>Litdex</RootNamespace>
+    <EnableNETAnalyzers>true</EnableNETAnalyzers>
+    <EnforceCodeStyleInBuild>false</EnforceCodeStyleInBuild>
+    <Authors>Shiroechi</Authors>
+    <Company>Litdex</Company>
+    <Description>Expansion for Litdex.Security.RNG with True Random Generator.</Description>
+    <Copyright>Shiroechi</Copyright>
+    <PackageLicenseFile>LICENSE</PackageLicenseFile>
+    <RepositoryUrl>https://github.com/Shiroechi/Litdex.Security.RNG.TRNG</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+    <PackageProjectUrl>https://github.com/Shiroechi/Litdex.Security.RNG.TRNG</PackageProjectUrl>
+    <NeutralLanguage>en</NeutralLanguage>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <DocumentationFile>D:\Project\C#\Litdex\Litdex.Security.RNG.ANU\Litdex.Security.RNG.ANU.xml</DocumentationFile>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <Optimize>true</Optimize>
+    <DocumentationFile>D:\Project\C#\Litdex\Litdex.Security.RNG.ANU\Litdex.Security.RNG.ANU.xml</DocumentationFile>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="litdex.security.rng" Version="2.4.0" />
+    <PackageReference Include="system.text.json" Version="5.0.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="LICENSE">
+      <Pack>True</Pack>
+      <PackagePath></PackagePath>
+    </None>
+  </ItemGroup>
+
+</Project>
