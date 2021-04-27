@@ -27,8 +27,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="litdex.security.rng" Version="2.4.0" />
-    <PackageReference Include="system.text.json" Version="5.0.1" />
+    <PackageReference Include="litdex.security.rng" Version="2.5.1" />
+    <PackageReference Include="system.text.json" Version="5.0.2" />
   </ItemGroup>
 
   <ItemGroup>
