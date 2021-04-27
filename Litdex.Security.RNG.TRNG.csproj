@@ -1,34 +1,41 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netstandard2.0</TargetFramework>
+    <TargetFrameworks>netstandard2.0;net5.0</TargetFrameworks>
     <RootNamespace>Litdex</RootNamespace>
-    <EnableNETAnalyzers>true</EnableNETAnalyzers>
+    <EnableNETAnalyzers>false</EnableNETAnalyzers>
     <EnforceCodeStyleInBuild>false</EnforceCodeStyleInBuild>
     <Authors>Shiroechi</Authors>
     <Company>Litdex</Company>
-    <Description>Expansion for Litdex.Security.RNG with True Random Generator.</Description>
+    <Description>Expansion for Litdex.Security.RNG to add True Random Number Generator (TRNG).</Description>
     <Copyright>Shiroechi</Copyright>
     <PackageLicenseFile>LICENSE</PackageLicenseFile>
     <RepositoryUrl>https://github.com/Shiroechi/Litdex.Security.RNG.TRNG</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
     <PackageProjectUrl>https://github.com/Shiroechi/Litdex.Security.RNG.TRNG</PackageProjectUrl>
     <NeutralLanguage>en</NeutralLanguage>
+    <PackageTags>Random RNG CSPRNG TRNG</PackageTags>
+    <Version>1.0.1</Version>
+    <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
-    <DocumentationFile>D:\Project\C#\Litdex\Litdex.Security.RNG.ANU\Litdex.Security.RNG.ANU.xml</DocumentationFile>
+    <DocumentationFile>D:\Project\C#\Litdex\Litdex.Security.RNG.TRNG\Litdex.Security.RNG.TRNG.xml</DocumentationFile>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <Optimize>true</Optimize>
-    <DocumentationFile>D:\Project\C#\Litdex\Litdex.Security.RNG.ANU\Litdex.Security.RNG.ANU.xml</DocumentationFile>
+    <DocumentationFile>D:\Project\C#\Litdex\Litdex.Security.RNG.TRNG\Litdex.Security.RNG.TRNG.xml</DocumentationFile>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|netstandard2.0|AnyCPU'">
+    <PlatformTarget>AnyCPU</PlatformTarget>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="litdex.security.rng" Version="2.4.0" />
-    <PackageReference Include="system.text.json" Version="5.0.1" />
+    <PackageReference Include="litdex.security.rng" Version="2.5.0" />
+    <PackageReference Include="system.text.json" Version="5.0.2" />
   </ItemGroup>
 
   <ItemGroup>
