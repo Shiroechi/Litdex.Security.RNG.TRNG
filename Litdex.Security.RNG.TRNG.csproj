@@ -1,19 +1,19 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netstandard2.0</TargetFramework>
+    <TargetFrameworks>netstandard2.0;net5.0</TargetFrameworks>
     <RootNamespace>Litdex</RootNamespace>
-    <EnableNETAnalyzers>true</EnableNETAnalyzers>
     <EnforceCodeStyleInBuild>false</EnforceCodeStyleInBuild>
     <Authors>Shiroechi</Authors>
     <Company>Litdex</Company>
-    <Description>Expansion for Litdex.Security.RNG with True Random Generator.</Description>
+    <Description>Expansion for Litdex.Security.RNG with True Random Number Generator.</Description>
     <Copyright>Shiroechi</Copyright>
     <PackageLicenseFile>LICENSE</PackageLicenseFile>
     <RepositoryUrl>https://github.com/Shiroechi/Litdex.Security.RNG.TRNG</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
     <PackageProjectUrl>https://github.com/Shiroechi/Litdex.Security.RNG.TRNG</PackageProjectUrl>
     <NeutralLanguage>en</NeutralLanguage>
+    <Version>1.1.1</Version>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
