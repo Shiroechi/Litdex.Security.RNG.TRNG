@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 namespace Litdex.Security.RNG
 {
 	/// <summary>
-	/// Base class for True Random Generator.
+	///		Base class for True Random Generator.
 	/// </summary>
 	public abstract class TrueRandom : Random
 	{
@@ -18,19 +18,20 @@ namespace Litdex.Security.RNG
 		protected HttpClient _HttpClient;
 		protected List<byte> _Entropy;
 		protected bool _IsSupplied;
+		protected const string _DefaultUserAgent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/90.0.4430.85 Safari/537.36";
 
 		#endregion Member
 
 		#region Protected Member
 
 		/// <summary>
-		///		Decode hexadecimal string to arrays of <see cref="byte"/>.
+		///		Decode hexadecimal string to array of <see cref="byte"/>.
 		/// </summary>
 		/// <param name="hexString">
 		///		Hexadecimal string to decode.
 		///	</param>
 		/// <returns>
-		///		Arrays of <see cref="byte"/> of decoded <paramref name="hexString"/>.
+		///		Array of <see cref="byte"/> of decoded <paramref name="hexString"/>.
 		/// </returns>
 		/// <exception cref="ArgumentNullException">
 		///		<paramref name="hexString"/> is null, empty or containing white spaces.
@@ -66,13 +67,13 @@ namespace Litdex.Security.RNG
 		}
 
 		/// <summary>
-		///	Add http user agent if not exist.
+		///		Add http user agent if not exist.
 		/// </summary>
 		/// <remarks>
-		///	by default using browser user agent.
+		///		by default using browser user agent.
 		/// </remarks>
 		/// <param name="userAgent">
-		///	User Agrnt value.
+		///		User Agent value.
 		///	</param>
 		public void AddHttpUserAgent(string userAgent = "")
 		{
@@ -81,20 +82,22 @@ namespace Litdex.Security.RNG
 				return;
 			}
 
-			if (this._HttpClient.DefaultRequestHeaders.UserAgent.Count == 0)
+			if (this._HttpClient.DefaultRequestHeaders.UserAgent.Count != 0)
 			{
-				if (userAgent == null | userAgent.Trim() == "")
-				{
-					this._HttpClient.DefaultRequestHeaders.Add(
-					"User-Agent",
-					"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/89.0.4389.90 Safari/537.36");
-				}
-				else
-				{
-					this._HttpClient.DefaultRequestHeaders.Add(
-					"User-Agent",
-					userAgent);
-				}
+				this._HttpClient.DefaultRequestHeaders.UserAgent.Clear();
+			}
+
+			if (userAgent == null || userAgent.Trim() == "")
+			{
+				this._HttpClient.DefaultRequestHeaders.Add(
+				"User-Agent",
+				_DefaultUserAgent);
+			}
+			else
+			{
+				this._HttpClient.DefaultRequestHeaders.Add(
+				"User-Agent",
+				userAgent);
 			}
 		}
 
@@ -166,7 +169,7 @@ namespace Litdex.Security.RNG
 		/// <returns>
 		///		<see cref="string"/> response.
 		///	</returns>
-		/// <exception cref="HttpResponseException">
+		/// <exception cref="Exception">
 		///		Unexpected error occured.
 		/// </exception>
 		/// <exception cref="HttpRequestException">
@@ -207,7 +210,7 @@ namespace Litdex.Security.RNG
 		///		Deserializes response into string.
 		/// </summary>
 		/// <param name="stream">
-		///		
+		///		Array of <see cref="byte"/>s to deserialize.
 		/// </param>
 		/// <returns>
 		///		<see cref="string"/> content.
@@ -236,7 +239,7 @@ namespace Litdex.Security.RNG
 		}
 
 		/// <summary>
-		/// Refill the entropy from the source.
+		///		Refill the entropy from the source.
 		/// </summary>
 		public override void Reseed()
 		{
@@ -274,9 +277,9 @@ namespace Litdex.Security.RNG
 
 			for (var i = 0; i < length; i++)
 			{
+				//bytes[i] = this._Entropy[i];
 				bytes[i] = this.NextByte();
 			}
-
 			return bytes;
 		}
 

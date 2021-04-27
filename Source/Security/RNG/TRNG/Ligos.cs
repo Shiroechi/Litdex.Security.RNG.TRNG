@@ -4,26 +4,28 @@ using System.Net.Http;
 namespace Litdex.Security.RNG.TRNG
 {
 	/// <summary>
-	/// TRNG from https://makemeapassword.ligos.net based on Terninger.
+	///		TRNG from https://makemeapassword.ligos.net based on Terninger.
 	/// </summary>
 	public class Ligos : TrueRandom
 	{
 		#region Constructor & Destructor
 
 		/// <summary>
-		/// TRNG from https://makemeapassword.ligos.net.
+		///		TRNG from https://makemeapassword.ligos.net.
 		/// </summary>
-		/// <param name="entropySize">Entropy size for RNG.</param>
+		/// <param name="entropySize">
+		///		The size of internal state for RNG in <see cref="byte"/>.
+		///	</param>
 		private Ligos(ushort entropySize = 2048)
 		{
 			this._Entropy = new List<byte>(entropySize);
 		}
 
 		/// <summary>
-		/// TRNG from https://makemeapassword.ligos.net.
+		///		TRNG from https://makemeapassword.ligos.net.
 		/// </summary>
 		/// <param name="client">
-		/// Client for sending and receive http response.
+		///		Client for sending and receive http response.
 		/// </param>
 		public Ligos(HttpClient client = null) : this(2048)
 		{
