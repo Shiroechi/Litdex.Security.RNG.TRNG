@@ -297,6 +297,24 @@ namespace Litdex.Security.RNG
 			}
 		}
 
+#if NET5_0_OR_GREATER
+
+		/// <inheritdoc/>
+		public override void Fill(Span<byte> bytes)
+		{
+			if (bytes.Length <= 0 || bytes == null)
+			{
+				throw new ArgumentNullException(nameof(bytes), "Array length can't be lower than 1 or null.");
+			}
+
+			for (var i = 0; i < bytes.Length; i++)
+			{
+				bytes[i] = this.NextByte();
+			}
+		}
+
+#endif
+
 		/// <inheritdoc/>
 		public override uint NextInt()
 		{
@@ -323,6 +341,6 @@ namespace Litdex.Security.RNG
 			return temp;
 		}
 
-		#endregion Public Method
+#endregion Public Method
 	}
 }
