@@ -45,6 +45,7 @@ namespace Litdex.Security.RNG.TRNG
 				this._IsSupplied = true;
 				this._HttpClient = client;
 			}
+			this.Reseed();
 		}
 
 		~ANU()
@@ -95,7 +96,7 @@ namespace Litdex.Security.RNG.TRNG
 			{
 				foreach (var data in doc.RootElement.GetProperty("data").EnumerateArray())
 				{
-					this._Entropy.AddRange(DecodeBase16(data.GetString()));
+					this._Entropy.AddRange(Utilities.BinaryEncoding.Base16.Decode(data.GetString()));
 				}
 			}
 		}
