@@ -6,100 +6,25 @@ using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
 
+using Litdex.Utilities;
+
 namespace Litdex.Security.RNG
 {
 	/// <summary>
 	///		Base class for True Random Generator.
 	/// </summary>
-	public abstract class TrueRandom : Random
+	public abstract class TrueRandom : IRNG
 	{
 		#region Member
 
 		protected HttpClient _HttpClient;
 		protected List<byte> _Entropy;
 		protected bool _IsSupplied;
-		protected const string _DefaultUserAgent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/90.0.4430.85 Safari/537.36";
+		protected const string _DefaultUserAgent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/94.0.4606.81 Safari/537.36.";
 
 		#endregion Member
 
-		#region Protected Member
-
-		/// <summary>
-		///		Decode hexadecimal string to array of <see cref="byte"/>.
-		/// </summary>
-		/// <param name="hexString">
-		///		Hexadecimal string to decode.
-		///	</param>
-		/// <returns>
-		///		Array of <see cref="byte"/> of decoded <paramref name="hexString"/>.
-		/// </returns>
-		/// <exception cref="ArgumentNullException">
-		///		<paramref name="hexString"/> is null, empty or containing white spaces.
-		/// </exception>
-		/// <exception cref="ArgumentOutOfRangeException">
-		///		<paramref name="hexString"/> length is odd.
-		/// </exception>
-		protected static byte[] DecodeBase16(string hexString)
-		{
-			if (string.IsNullOrWhiteSpace(hexString))
-			{
-				throw new ArgumentNullException(nameof(hexString), "Hexadecimal string can't null, empty or containing white spaces.");
-			}
-
-			if (hexString.Length % 2 != 0)
-			{
-				throw new ArgumentOutOfRangeException(nameof(hexString), "The hexadecimal string is invalid because it has an odd length.");
-			}
-
-			var result = new byte[hexString.Length / 2];
-
-			for (var i = 0; i < result.Length; i++)
-			{
-				int high = hexString[i * 2];
-				int low = hexString[i * 2 + 1];
-				high = (high & 0xf) + ((high & 0x40) >> 6) * 9;
-				low = (low & 0xf) + ((low & 0x40) >> 6) * 9;
-
-				result[i] = (byte)((high << 4) | low);
-			}
-
-			return result;
-		}
-
-		/// <summary>
-		///		Add http user agent if not exist.
-		/// </summary>
-		/// <remarks>
-		///		by default using browser user agent.
-		/// </remarks>
-		/// <param name="userAgent">
-		///		User Agent value.
-		///	</param>
-		public void AddHttpUserAgent(string userAgent = "")
-		{
-			if (this._HttpClient == null)
-			{
-				return;
-			}
-
-			if (this._HttpClient.DefaultRequestHeaders.UserAgent.Count != 0)
-			{
-				this._HttpClient.DefaultRequestHeaders.UserAgent.Clear();
-			}
-
-			if (userAgent == null || userAgent.Trim() == "")
-			{
-				this._HttpClient.DefaultRequestHeaders.Add(
-				"User-Agent",
-				_DefaultUserAgent);
-			}
-			else
-			{
-				this._HttpClient.DefaultRequestHeaders.Add(
-				"User-Agent",
-				userAgent);
-			}
-		}
+		#region Protected Method
 
 		/// <summary>
 		///		Get JSON response from url.
@@ -228,12 +153,47 @@ namespace Litdex.Security.RNG
 			return null;
 		}
 
-		#endregion Protected Member
+		#endregion Protected Method
 
 		#region Public Method
 
+		/// <summary>
+		///		Add http user agent if not exist.
+		/// </summary>
+		/// <remarks>
+		///		by default using Google Chrome browser user agent.
+		/// </remarks>
+		/// <param name="userAgent">
+		///		User Agent value.
+		///	</param>
+		public void AddHttpUserAgent(string userAgent = "")
+		{
+			if (this._HttpClient == null)
+			{
+				return;
+			}
+
+			if (this._HttpClient.DefaultRequestHeaders.UserAgent.Count != 0)
+			{
+				this._HttpClient.DefaultRequestHeaders.UserAgent.Clear();
+			}
+
+			if (string.IsNullOrWhiteSpace(userAgent))
+			{
+				this._HttpClient.DefaultRequestHeaders.Add(
+					"User-Agent",
+					_DefaultUserAgent);
+			}
+			else
+			{
+				this._HttpClient.DefaultRequestHeaders.Add(
+					"User-Agent",
+					userAgent);
+			}
+		}
+
 		/// <inheritdoc/>
-		public override string AlgorithmName()
+		public virtual string AlgorithmName()
 		{
 			return "True Random Generator";
 		}
@@ -241,19 +201,19 @@ namespace Litdex.Security.RNG
 		/// <summary>
 		///		Refill the entropy from the source.
 		/// </summary>
-		public override void Reseed()
+		public virtual void Reseed()
 		{
-			throw new NotImplementedException();
+			throw new NotImplementedException("True randon generator can't use Reseed.");
 		}
 
 		/// <inheritdoc/>
-		public override bool NextBoolean()
+		public virtual bool NextBoolean()
 		{
 			return this.NextByte() >> 7 == 0;
 		}
 
 		/// <inheritdoc/>
-		public override byte NextByte()
+		public virtual byte NextByte()
 		{
 			if (this._Entropy.Count <= 0)
 			{
@@ -266,7 +226,18 @@ namespace Litdex.Security.RNG
 		}
 
 		/// <inheritdoc/>
-		public override byte[] NextBytes(int length)
+		public virtual byte NextByte(byte lower, byte upper)
+		{
+			if (lower >= upper)
+			{
+				throw new ArgumentException(nameof(lower), "The lower bound must not be greater than or equal to the upper bound.");
+			}
+
+			return (byte)this.NextInt(lower, upper);
+		}
+
+		/// <inheritdoc/>
+		public virtual byte[] NextBytes(int length)
 		{
 			if (length <= 0)
 			{
@@ -275,22 +246,30 @@ namespace Litdex.Security.RNG
 
 			var bytes = new byte[length];
 
-			for (var i = 0; i < length; i++)
-			{
-				//bytes[i] = this._Entropy[i];
-				bytes[i] = this.NextByte();
-			}
+			this.Fill(bytes);
+
 			return bytes;
 		}
 
 		/// <inheritdoc/>
-		public override void Fill(byte[] bytes)
+		public virtual byte[] NextBytesLittleEndian(int length)
+		{
+			return this.NextBytes(length);
+		}
+
+		/// <inheritdoc/>
+		public virtual byte[] NextBytesBigEndian(int length)
+		{
+			return this.NextBytes(length);
+		}
+
+		/// <inheritdoc/>
+		public virtual void Fill(byte[] bytes)
 		{
 			if (bytes.Length <= 0 || bytes == null)
 			{
 				throw new ArgumentNullException(nameof(bytes), "Array length can't be lower than 1 or null.");
 			}
-
 			for (var i = 0; i < bytes.Length; i++)
 			{
 				bytes[i] = this.NextByte();
@@ -298,29 +277,161 @@ namespace Litdex.Security.RNG
 		}
 
 		/// <inheritdoc/>
-		public override uint NextInt()
+		public virtual void FillLittleEndian(byte[] bytes)
 		{
-			if (this._Entropy.Count < 4)
-			{
-				this.Reseed();
-			}
-
-			var temp = BitConverter.ToUInt32(this._Entropy.GetRange(0, 4).ToArray(), 0);
-			this._Entropy.RemoveRange(0, 4);
-			return temp;
+			this.Fill(bytes);
 		}
 
 		/// <inheritdoc/>
-		public override ulong NextLong()
+		public virtual void FillBigEndian(byte[] bytes)
 		{
-			if (this._Entropy.Count < 8)
+			this.Fill(bytes);
+		}
+
+#if NET5_0_OR_GREATER
+
+		/// <inheritdoc/>
+		public virtual void Fill(Span<byte> bytes)
+		{
+			this.Fill(bytes);
+		}
+
+		/// <inheritdoc/>
+		public virtual void FillLittleEndian(Span<byte> bytes)
+		{
+			this.Fill(bytes);
+		}
+
+		/// <inheritdoc/>
+		public virtual void FillBigEndian(Span<byte> bytes)
+		{
+			this.Fill(bytes);
+		}
+
+#endif
+
+		/// <inheritdoc/>
+		public virtual uint NextInt()
+		{
+			var buffer = new byte[4];
+			for (var i = 0; i < buffer.Length; i++)
 			{
-				this.Reseed();
+				buffer[i] = this.NextByte();
 			}
 
-			var temp = BitConverter.ToUInt32(this._Entropy.GetRange(0, 8).ToArray(), 0);
-			this._Entropy.RemoveRange(0, 8);
-			return temp;
+			uint value = 0;
+#if NET5_0_OR_GREATER
+			System.Buffers.Binary.BinaryPrimitives.ReadInt32LittleEndian(buffer);
+#else
+			value = BitConverter.ToUInt32(buffer, 0);
+#endif
+			return value;
+		}
+
+		/// <inheritdoc/>
+		public virtual uint NextInt(uint lower, uint upper)
+		{
+			if (lower >= upper)
+			{
+				throw new ArgumentException(nameof(lower), "The lower bound must not be greater than or equal to the upper bound.");
+			}
+
+			// using unbiased lemire method
+			// from https://www.pcg-random.org/posts/bounded-rands.html
+
+			var range = upper - lower;
+			uint x = this.NextInt();
+			ulong m = (ulong)x * range;
+			uint l = (uint)m;
+			if (l < range)
+			{
+				uint t = uint.MaxValue - range;
+				if (t >= range)
+				{
+					t -= range;
+					if (t >= range)
+					{
+						t %= range;
+					}
+				}
+				while (l < t)
+				{
+					x = this.NextInt();
+					m = (ulong)x * range;
+					l = (uint)m;
+				}
+			}
+			return (uint)(m >> 32) + lower;
+		}
+
+		/// <inheritdoc/>
+		public virtual ulong NextLong()
+		{
+			var buffer = new byte[8];
+			for (var i = 0; i < buffer.Length; i++)
+			{
+				buffer[i] = this.NextByte();
+			}
+
+			ulong value = 0;
+#if NET5_0_OR_GREATER
+			System.Buffers.Binary.BinaryPrimitives.ReadInt64LittleEndian(buffer);
+#else
+			value = BitConverter.ToUInt32(buffer, 0);
+#endif
+			return value;
+		}
+
+		/// <inheritdoc/>
+		public virtual ulong NextLong(ulong lower, ulong upper)
+		{
+			if (lower >= upper)
+			{
+				throw new ArgumentException(nameof(lower), "The lower bound must not be greater than or equal to the upper bound.");
+			}
+
+			// using unbiased lemire method
+			// from https://www.pcg-random.org/posts/bounded-rands.html
+
+			var range = upper - lower;
+			ulong x = this.NextLong();
+			var (m, l) = Math128.Multiply(x, range);
+			if (l < range)
+			{
+				ulong t = ulong.MaxValue - range;
+				if (t >= range)
+				{
+					t -= range;
+					if (t >= range)
+					{
+						t %= range;
+					}
+				}
+				while (l < t)
+				{
+					x = this.NextLong();
+					(m, l) = Math128.Multiply(x, range);
+				}
+			}
+			return m;
+		}
+
+		/// <inheritdoc/>
+		public virtual double NextDouble()
+		{
+			return (this.NextLong() >> 11) * (1.0 / (1L << 53));
+		}
+
+		/// <inheritdoc/>
+		public virtual double NextDouble(double lower, double upper)
+		{
+			if (lower >= upper)
+			{
+				throw new ArgumentException(nameof(lower), "The lower bound must not be greater than or equal to the upper bound.");
+			}
+
+			var diff = upper - lower + 1;
+			return lower + (this.NextDouble() % diff);
 		}
 
 		#endregion Public Method

@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFrameworks>netstandard2.0;net5.0</TargetFrameworks>
@@ -13,7 +13,9 @@
     <RepositoryType>git</RepositoryType>
     <PackageProjectUrl>https://github.com/Shiroechi/Litdex.Security.RNG.TRNG</PackageProjectUrl>
     <NeutralLanguage>en</NeutralLanguage>
-    <Version>1.1.1</Version>
+    <PackageTags>Random RNG CSPRNG TRNG</PackageTags>
+    <Version>1.1.2</Version>
+    <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
@@ -22,12 +24,15 @@
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-    <Optimize>true</Optimize>
-    <DocumentationFile>D:\Project\C#\Litdex\Litdex.Security.RNG.ANU\Litdex.Security.RNG.ANU.xml</DocumentationFile>
+    <DocumentationFile></DocumentationFile>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|netstandard2.0|AnyCPU'">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <WarningLevel>4</WarningLevel>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="litdex.security.rng" Version="2.5.1" />
     <PackageReference Include="system.text.json" Version="5.0.2" />
   </ItemGroup>
 
@@ -36,6 +41,10 @@
       <Pack>True</Pack>
       <PackagePath></PackagePath>
     </None>
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Litdex.Security.RNG\Litdex.Security.RNG.csproj" />
   </ItemGroup>
 
 </Project>

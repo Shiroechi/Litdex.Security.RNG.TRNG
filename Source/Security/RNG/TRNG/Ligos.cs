@@ -1,6 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Net.Http;
 
+using Litdex.Utilities.BinaryEncoding;
+
 namespace Litdex.Security.RNG.TRNG
 {
 	/// <summary>
@@ -67,7 +69,7 @@ namespace Litdex.Security.RNG.TRNG
 			this._Entropy.Clear();
 			var hex = this.GetStringResponseAsync("https://makemeapassword.ligos.net/api/v1/hex/plain?c=32&l=128").GetAwaiter().GetResult();
 			hex.Replace("\n", "");
-			this._Entropy.AddRange(DecodeBase16(hex));
+			this._Entropy.AddRange(Base16.Decode(hex));
 		}
 
 		#endregion Public Method
