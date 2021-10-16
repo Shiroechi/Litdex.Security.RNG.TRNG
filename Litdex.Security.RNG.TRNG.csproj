@@ -46,7 +46,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Litdex.Security.RNG\Litdex.Security.RNG.csproj" />
-    <ProjectReference Include="..\Litdex.Utilities\Litdex.Utilities.csproj" />
   </ItemGroup>
 
 </Project>
