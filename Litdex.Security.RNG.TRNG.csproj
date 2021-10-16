@@ -3,11 +3,10 @@
   <PropertyGroup>
     <TargetFrameworks>netstandard2.0;net5.0</TargetFrameworks>
     <RootNamespace>Litdex</RootNamespace>
-    <EnableNETAnalyzers>false</EnableNETAnalyzers>
     <EnforceCodeStyleInBuild>false</EnforceCodeStyleInBuild>
     <Authors>Shiroechi</Authors>
     <Company>Litdex</Company>
-    <Description>Expansion for Litdex.Security.RNG to add True Random Number Generator (TRNG).</Description>
+    <Description>Expansion for Litdex.Security.RNG with True Random Number Generator.</Description>
     <Copyright>Shiroechi</Copyright>
     <PackageLicenseFile>LICENSE</PackageLicenseFile>
     <RepositoryUrl>https://github.com/Shiroechi/Litdex.Security.RNG.TRNG</RepositoryUrl>
@@ -20,7 +19,7 @@
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
-    <DocumentationFile>.\Litdex.Security.RNG.TRNG.xml</DocumentationFile>
+    <DocumentationFile>D:\Project\C#\Litdex\Litdex.Security.RNG.ANU\Litdex.Security.RNG.ANU.xml</DocumentationFile>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
 

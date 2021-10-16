@@ -24,7 +24,7 @@ With TRNG, even if two exactly identical generators were placed in identical env
 
 - [Ligos](https://makemeapassword.ligos.net/)
 
-From this [site](https://blog.ligos.net/2017-05-08/Building-A-CRNG-Terninger-1-Introduction.html) `makemeapassword.ligos.net` using [Fortuna](https://www.schneier.com/academic/paperfiles/fortuna.pdf) CSPRNG with various source to supplement the entropy. SO it can be said truly random.
+From this [site](https://blog.ligos.net/2017-05-08/Building-A-CRNG-Terninger-1-Introduction.html) `makemeapassword.ligos.net` using [Fortuna](https://www.schneier.com/academic/paperfiles/fortuna.pdf) CSPRNG with various source to supplement the entropy. So it can be said truly random.
 
 - [ANU](https://qrng.anu.edu.au
 
